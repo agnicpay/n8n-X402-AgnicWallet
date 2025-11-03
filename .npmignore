@@ -1,0 +1,58 @@
+# Source files (only include compiled dist/)
+nodes/
+credentials/
+
+# Development files
+*.ts
+!*.d.ts
+tsconfig.json
+gulpfile.js
+
+# Documentation (keep README.md, exclude others)
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+PUBLISHING.md
+PUBLISH_CHECKLIST.md
+CHANGELOG.md
+examples/
+
+# Git and GitHub
+.git/
+.github/
+.gitignore
+
+# Dependencies
+node_modules/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Test files
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+test/
+tests/
+__tests__/
+coverage/
+
+# Build artifacts
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Misc
+.npmrc
