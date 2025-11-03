@@ -30,11 +30,8 @@ jobs:
     - name: Run TypeScript compiler check
       run: npx tsc --noEmit
 
-    - name: Run ESLint
-      run: npm run lint --if-present
-
     - name: Check code formatting
-      run: npx prettier --check nodes credentials
+      run: npm run format:check
 
     - name: Build
       run: npm run build
