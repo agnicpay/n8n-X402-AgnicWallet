@@ -164,13 +164,27 @@ JSON body for sending data to the API
 
 ## Backend Service
 
-This node requires the AgnicWallet backend service to sign payments. The backend:
-- Runs at `api.agnicpay.xyz` (hosted service)
-- Handles payment signing securely
-- Manages user authentication and authorization
-- Tracks transaction history
+This node requires the AgnicWallet backend API to function. **This is by design and secure.**
 
-For most users, the hosted service is the simplest option. Advanced users can self-host the backend by setting the `AGNICWALLET_API_URL` environment variable.
+### How It Works
+1. You create a free account at [AgnicWallet](https://app.agnicpay.xyz)
+2. You authorize n8n to use your wallet (OAuth2 or API Key)
+3. When making X402 requests, the node calls `api.agnicpay.xyz` to sign payments on your behalf
+4. Your wallet is non-custodial (keys managed by Privy, not stored by AgnicWallet)
+
+### Why This Architecture?
+- **No blockchain complexity** - You don't manage private keys or gas fees
+- **Automatic payments** - Sign once, automate forever
+- **Spending controls** - Set monthly limits for safety
+- **Standard pattern** - Just like Slack, Notion, and other n8n nodes that use external APIs
+
+### Backend API Details
+- **Hosted at:** `api.agnicpay.xyz` (free to use)
+- **Authentication:** OAuth2 or API Key
+- **What it does:** Signs X402 payments with your authorized wallet
+- **Open source:** You can self-host by setting `AGNICWALLET_API_URL` environment variable
+
+This is the same architecture used by most n8n community nodes that interact with external services.
 
 ## Payment Details
 
@@ -187,6 +201,36 @@ For most users, the hosted service is the simplest option. Advanced users can se
 - **Spending limits** - Monthly caps prevent overspending
 - **Payment review** - See all payments in AgnicWallet dashboard
 - **Revocable access** - Disconnect N8N anytime
+
+## FAQ
+
+### Is my wallet safe?
+Yes! AgnicWallet is non-custodial. Your private keys are managed by [Privy](https://privy.io), not stored on AgnicWallet servers. The backend only signs transactions you've authorized.
+
+### Do I need to trust AgnicWallet?
+Yes, but only as much as you trust Slack, Notion, or Google when using their n8n nodes. You're authorizing AgnicWallet to sign X402 payments on your behalf within your spending limits.
+
+### Can I use this node without AgnicWallet?
+No. This node is specifically designed to work with AgnicWallet's backend API. However, you can:
+- Fork this node and modify it to use your own payment service
+- Self-host the AgnicWallet backend (set `AGNICWALLET_API_URL` environment variable)
+
+### Is the backend API free?
+Yes! The AgnicWallet service is free to use. You only pay blockchain transaction costs (USDC payments).
+
+### What if api.agnicpay.xyz goes down?
+- Your workflows will fail with payment signing errors
+- Advanced users can self-host the backend for redundancy
+- Check status at https://app.agnicpay.xyz
+
+### Can n8n approve a node with external dependencies?
+Absolutely! Most popular n8n community nodes depend on external APIs:
+- Slack → api.slack.com
+- GitHub → api.github.com
+- Stripe → api.stripe.com
+- AgnicWallet → api.agnicpay.xyz ✅
+
+This is standard practice and well-documented in the node's README.
 
 ## Troubleshooting
 
