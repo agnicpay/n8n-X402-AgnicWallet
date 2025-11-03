@@ -4,8 +4,7 @@ export class AgnicWalletOAuth2Api implements ICredentialType {
   name = "agnicWalletOAuth2Api";
   extends = ["oAuth2Api"];
   displayName = "AgnicWallet OAuth2 API";
-  documentationUrl =
-    "https://github.com/agnicpay/n8n-X402-AgnicWallet#readme";
+  documentationUrl = "https://github.com/agnicpay/n8n-X402-AgnicWallet#readme";
 
   properties: INodeProperties[] = [
     {
