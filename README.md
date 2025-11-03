@@ -2,12 +2,12 @@
 
 [![NPM Version](https://img.shields.io/npm/v/n8n-nodes-agnicwallet)](https://www.npmjs.com/package/n8n-nodes-agnicwallet)
 [![License](https://img.shields.io/npm/l/n8n-nodes-agnicwallet)](https://www.npmjs.com/package/n8n-nodes-agnicwallet)
-[![GitHub issues](https://img.shields.io/github/issues/asadsafari/n8n-nodes-agnicwallet)](https://github.com/asadsafari/n8n-nodes-agnicwallet/issues)
-[![GitHub stars](https://img.shields.io/github/stars/asadsafari/n8n-nodes-agnicwallet)](https://github.com/asadsafari/n8n-nodes-agnicwallet/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/agnicpay/n8n-X402-AgnicWallet)](https://github.com/agnicpay/n8n-X402-AgnicWallet/issues)
+[![GitHub stars](https://img.shields.io/github/stars/agnicpay/n8n-X402-AgnicWallet)](https://github.com/agnicpay/n8n-X402-AgnicWallet/stargazers)
 
 N8N community node for AgnicWallet - automated Web3 payments for X402-enabled APIs.
 
-> ⭐ If you find this node useful, please star the repository on [GitHub](https://github.com/asadsafari/n8n-nodes-agnicwallet)!
+> ⭐ If you find this node useful, please star the repository on [GitHub](https://github.com/agnicpay/n8n-X402-AgnicWallet)!
 
 Make HTTP requests to X402-enabled APIs with automatic blockchain payment handling via AgnicWallet. No manual wallet management, no complex crypto operations - just authenticate and automate.
 
@@ -298,7 +298,7 @@ The node automatically selects the appropriate network based on your API token c
 
 Contributions are welcome! We appreciate bug reports, feature requests, and pull requests.
 
-- **Bug reports & feature requests:** [Open an issue](https://github.com/asadsafari/n8n-nodes-agnicwallet/issues)
+- **Bug reports & feature requests:** [Open an issue](https://github.com/agnicpay/n8n-X402-AgnicWallet/issues)
 - **Pull requests:** See our [Contributing Guide](CONTRIBUTING.md)
 - **Questions:** Contact us at support@agnicpay.xyz
 

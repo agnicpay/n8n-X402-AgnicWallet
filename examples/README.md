@@ -56,7 +56,7 @@ Before using these examples:
 
 - Check the [main README](../README.md) for detailed documentation
 - Review the [Usage Guide](../nodes/X402HttpRequest/USAGE_GUIDE.md)
-- Open an issue on [GitHub](https://github.com/asadsafari/n8n-nodes-agnicwallet/issues)
+- Open an issue on [GitHub](https://github.com/agnicpay/n8n-X402-AgnicWallet/issues)
 
 ## Contributing Examples
 

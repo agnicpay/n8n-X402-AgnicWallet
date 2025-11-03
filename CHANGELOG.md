@@ -53,4 +53,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[1.0.3]: https://github.com/agnicpay/n8n-nodes-agnicwallet/releases/tag/v1.0.3
+[1.0.3]: https://github.com/agnicpay/n8n-X402-AgnicWallet/releases/tag/v1.0.3

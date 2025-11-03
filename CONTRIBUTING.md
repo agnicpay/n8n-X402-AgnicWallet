@@ -6,7 +6,7 @@ Thank you for your interest in contributing to the AgnicWallet n8n node! We welc
 
 ### Reporting Bugs
 
-If you find a bug, please [open an issue](https://github.com/asadsafari/n8n-nodes-agnicwallet/issues/new) with:
+If you find a bug, please [open an issue](https://github.com/agnicpay/n8n-X402-AgnicWallet/issues/new) with:
 
 - A clear, descriptive title
 - Steps to reproduce the issue
@@ -18,7 +18,7 @@ If you find a bug, please [open an issue](https://github.com/asadsafari/n8n-node
 
 We love new ideas! To suggest a feature:
 
-1. Check if it's already been suggested in [Issues](https://github.com/asadsafari/n8n-nodes-agnicwallet/issues)
+1. Check if it's already been suggested in [Issues](https://github.com/agnicpay/n8n-X402-AgnicWallet/issues)
 2. Open a new issue with the `enhancement` label
 3. Describe the feature and why it would be useful
 4. If possible, provide examples of how it would work
@@ -27,8 +27,8 @@ We love new ideas! To suggest a feature:
 
 1. **Fork the repository**
    ```bash
-   git clone https://github.com/asadsafari/n8n-nodes-agnicwallet.git
-   cd n8n-nodes-agnicwallet
+   git clone https://github.com/agnicpay/n8n-X402-AgnicWallet.git
+   cd n8n-X402-AgnicWallet
    ```
 
 2. **Create a branch**
@@ -147,7 +147,7 @@ n8n-nodes-agnicwallet/
 
 ## Need Help?
 
-- Check existing [Issues](https://github.com/asadsafari/n8n-nodes-agnicwallet/issues)
+- Check existing [Issues](https://github.com/agnicpay/n8n-X402-AgnicWallet/issues)
 - Read the [n8n documentation](https://docs.n8n.io/integrations/creating-nodes/)
 - Contact us at support@agnicpay.xyz
 
