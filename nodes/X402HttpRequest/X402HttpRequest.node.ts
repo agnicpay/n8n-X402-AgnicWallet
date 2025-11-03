@@ -156,10 +156,8 @@ export class X402HttpRequest implements INodeType {
         let apiBaseUrl: string;
         let authHeader: string;
 
-        // Use AgnicWallet backend API endpoint (production cloud by default)
-        // Can override with AGNICWALLET_API_URL environment variable for local development
-        apiBaseUrl =
-          process.env.AGNICWALLET_API_URL || "https://api.agnicpay.xyz";
+        // Use AgnicWallet backend API endpoint (production cloud)
+        apiBaseUrl = "https://api.agnicpay.xyz";
 
         if (authentication === "oAuth2") {
           // OAuth2 authentication
