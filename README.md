@@ -170,7 +170,7 @@ This node requires the AgnicWallet backend API to function. **This is by design 
 1. You create a free account at [AgnicWallet](https://app.agnicpay.xyz)
 2. You authorize n8n to use your wallet (OAuth2 or API Key)
 3. When making X402 requests, the node calls `api.agnicpay.xyz` to sign payments on your behalf
-4. Your wallet is non-custodial (keys managed by Privy, not stored by AgnicWallet)
+4. Your wallet is non-custodial (keys managed securely, not stored by AgnicWallet)
 
 ### Why This Architecture?
 - **No blockchain complexity** - You don't manage private keys or gas fees
@@ -205,7 +205,7 @@ This is the same architecture used by most n8n community nodes that interact wit
 ## FAQ
 
 ### Is my wallet safe?
-Yes! AgnicWallet is non-custodial. Your private keys are managed by [Privy](https://privy.io), not stored on AgnicWallet servers. The backend only signs transactions you've authorized.
+Yes! AgnicWallet is non-custodial. Your private keys are managed securely using industry-standard key management infrastructure, never stored on AgnicWallet servers. The backend only signs transactions you've authorized.
 
 ### Do I need to trust AgnicWallet?
 Yes, but only as much as you trust Slack, Notion, or Google when using their n8n nodes. You're authorizing AgnicWallet to sign X402 payments on your behalf within your spending limits.

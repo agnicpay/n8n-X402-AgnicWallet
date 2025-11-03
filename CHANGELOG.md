@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2025-11-03
+
+### Changed
+- Updated documentation to remove third-party infrastructure references
+- Improved security messaging with generic descriptions of key management
+
+### Documentation
+- Enhanced wallet safety FAQ with more professional language
+- Updated backend architecture descriptions for better clarity
+
 ## [1.0.4] - 2025-11-03
 
 ### Changed
@@ -36,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GET, POST, PUT, DELETE HTTP methods
 - AgnicWallet backend integration
 - Payment signing via `/api/sign-payment` endpoint
-- Non-custodial wallet support via Privy
+- Non-custodial wallet support with secure key management
 - USDC payments on Base and Solana
 - Gasless transactions using EIP-3009 TransferWithAuthorization
 
@@ -66,5 +76,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.0.5]: https://github.com/agnicpay/n8n-X402-AgnicWallet/releases/tag/v1.0.5
 [1.0.4]: https://github.com/agnicpay/n8n-X402-AgnicWallet/releases/tag/v1.0.4
 [1.0.3]: https://github.com/agnicpay/n8n-X402-AgnicWallet/releases/tag/v1.0.3
