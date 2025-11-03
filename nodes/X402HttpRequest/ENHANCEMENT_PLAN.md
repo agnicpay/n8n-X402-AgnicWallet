@@ -1,6 +1,7 @@
 # N8N X402 Node Enhancement Plan
 
 ## Current State ✅
+
 - Authentication (OAuth2 + API Key)
 - HTTP Methods (GET, POST, PUT, DELETE)
 - URL input
@@ -11,6 +12,7 @@
 ## Proposed Enhancements
 
 ### 1. Query Parameters (for GET/all requests)
+
 ```typescript
 {
   displayName: 'Query Parameters',
@@ -45,6 +47,7 @@
 ```
 
 ### 2. Body Type Options (instead of JSON only)
+
 ```typescript
 {
   displayName: 'Send Body',
@@ -155,6 +158,7 @@
 ```
 
 ### 3. Response Options
+
 ```typescript
 {
   displayName: 'Options',
@@ -217,15 +221,18 @@
 ```
 
 ### 4. Better Payment Details in Response
+
 ```typescript
 // Enhanced response object
 return {
-  ...(typeof result === 'object' && result !== null ? result : { data: result }),
+  ...(typeof result === "object" && result !== null
+    ? result
+    : { data: result }),
   _agnicWallet: {
     paymentMade: true,
     amountPaid,
-    currency: 'USDC',
-    network: 'base-sepolia',
+    currency: "USDC",
+    network: "base-sepolia",
     timestamp: new Date().toISOString(),
     transactionId: signingResult.paymentProof?.transactionId,
   },
@@ -235,6 +242,7 @@ return {
 ### 5. Use Cases Supported
 
 #### Use Case 1: ChatGPT via X402 (Your Example)
+
 ```
 Method: POST
 URL: https://agnicbillo-proxy.asad-safari.workers.dev/v1/custom/chatgpt/v1/chat/completions
@@ -249,6 +257,7 @@ Body:
 ```
 
 #### Use Case 2: Search API with Query Params
+
 ```
 Method: GET
 URL: https://api.example.com/search
@@ -260,6 +269,7 @@ Headers:
 ```
 
 #### Use Case 3: Form Submission
+
 ```
 Method: POST
 URL: https://api.example.com/submit
@@ -271,6 +281,7 @@ Body Parameters:
 ```
 
 #### Use Case 4: File Upload (Future Enhancement)
+
 ```
 Method: POST
 URL: https://api.example.com/upload
@@ -283,18 +294,21 @@ Body Parameters:
 ## Implementation Priority
 
 ### Phase 1: Essential (Do Now)
+
 1. ✅ Query Parameters
 2. ✅ Body Content Type options
 3. ✅ Timeout option
 4. ✅ Full response option
 
 ### Phase 2: Nice to Have
+
 1. Form encoding support
 2. Raw body support
 3. Response format options
 4. Better error messages
 
 ### Phase 3: Advanced
+
 1. File upload support
 2. Retry logic
 3. Rate limiting handling
@@ -303,11 +317,13 @@ Body Parameters:
 ## Code Changes Needed
 
 ### Main Areas to Update:
+
 1. `properties` array in node description (lines 41-139)
 2. `execute` function to handle new options (lines 142-223)
 3. `makeX402Request` helper to support new body types (lines 226-355)
 
 ### Estimated Lines of Code:
+
 - Properties additions: ~200 lines
 - Execute logic: ~50 lines
 - Helper updates: ~100 lines

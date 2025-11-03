@@ -1,89 +1,90 @@
-import { ICredentialType, INodeProperties } from 'n8n-workflow';
+import { ICredentialType, INodeProperties } from "n8n-workflow";
 
 export class AgnicWalletOAuth2Api implements ICredentialType {
-  name = 'agnicWalletOAuth2Api';
-  extends = ['oAuth2Api'];
-  displayName = 'AgnicWallet OAuth2 API';
-  documentationUrl = 'https://github.com/agnicpay/agnicwallet-project/blob/main/OAUTH_COMPLETE_GUIDE.md';
+  name = "agnicWalletOAuth2Api";
+  extends = ["oAuth2Api"];
+  displayName = "AgnicWallet OAuth2 API";
+  documentationUrl =
+    "https://github.com/agnicpay/agnicwallet-project/blob/main/OAUTH_COMPLETE_GUIDE.md";
 
   properties: INodeProperties[] = [
     {
-      displayName: 'Grant Type',
-      name: 'grantType',
-      type: 'hidden',
-      default: 'authorizationCode',
+      displayName: "Grant Type",
+      name: "grantType",
+      type: "hidden",
+      default: "authorizationCode",
     },
     {
-      displayName: 'Authorization URL',
-      name: 'authUrl',
-      type: 'string',
-      default: 'https://api.agnicpay.xyz/oauth/authorize',
+      displayName: "Authorization URL",
+      name: "authUrl",
+      type: "string",
+      default: "https://api.agnicpay.xyz/oauth/authorize",
       required: true,
-      description: 'The OAuth2 authorization endpoint',
+      description: "The OAuth2 authorization endpoint",
     },
     {
-      displayName: 'Access Token URL',
-      name: 'accessTokenUrl',
-      type: 'string',
-      default: 'https://api.agnicpay.xyz/oauth/token',
+      displayName: "Access Token URL",
+      name: "accessTokenUrl",
+      type: "string",
+      default: "https://api.agnicpay.xyz/oauth/token",
       required: true,
-      description: 'The OAuth2 token endpoint',
+      description: "The OAuth2 token endpoint",
     },
     {
-      displayName: 'Client ID',
-      name: 'clientId',
-      type: 'string',
-      default: 'n8n_default',
+      displayName: "Client ID",
+      name: "clientId",
+      type: "string",
+      default: "n8n_default",
       required: true,
-      description: 'OAuth2 Client ID (default: n8n_default)',
+      description: "OAuth2 Client ID (default: n8n_default)",
     },
     {
-      displayName: 'Client Secret',
-      name: 'clientSecret',
-      type: 'string',
+      displayName: "Client Secret",
+      name: "clientSecret",
+      type: "string",
       typeOptions: {
         password: true,
       },
-      default: '',
-      description: 'OAuth2 Client Secret (optional for PKCE)',
+      default: "",
+      description: "OAuth2 Client Secret (optional for PKCE)",
     },
     {
-      displayName: 'Scope',
-      name: 'scope',
-      type: 'string',
-      default: 'payments:sign balance:read',
-      description: 'OAuth2 scopes',
+      displayName: "Scope",
+      name: "scope",
+      type: "string",
+      default: "payments:sign balance:read",
+      description: "OAuth2 scopes",
     },
     {
-      displayName: 'Auth URI Query Parameters',
-      name: 'authQueryParameters',
-      type: 'string',
-      default: '',
-      description: 'Additional query parameters for authorization URL',
+      displayName: "Auth URI Query Parameters",
+      name: "authQueryParameters",
+      type: "string",
+      default: "",
+      description: "Additional query parameters for authorization URL",
     },
     {
-      displayName: 'Authentication',
-      name: 'authentication',
-      type: 'options',
+      displayName: "Authentication",
+      name: "authentication",
+      type: "options",
       options: [
         {
-          name: 'Body',
-          value: 'body',
+          name: "Body",
+          value: "body",
         },
         {
-          name: 'Header',
-          value: 'header',
+          name: "Header",
+          value: "header",
         },
       ],
-      default: 'body',
-      description: 'How to send credentials',
+      default: "body",
+      description: "How to send credentials",
     },
     {
-      displayName: 'Use PKCE',
-      name: 'usePKCE',
-      type: 'boolean',
+      displayName: "Use PKCE",
+      name: "usePKCE",
+      type: "boolean",
       default: true,
-      description: 'Whether to use PKCE (Proof Key for Code Exchange)',
+      description: "Whether to use PKCE (Proof Key for Code Exchange)",
     },
   ];
 }

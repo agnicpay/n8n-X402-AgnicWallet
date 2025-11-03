@@ -3,34 +3,42 @@
 ## Basic Configuration
 
 ### 1. Authentication
+
 - **OAuth2** (Recommended): Connect your AgnicWallet account
 - **API Key**: Use your API token for automation
 
 ### 2. Method Selection
+
 - **GET**: For retrieving data (no body field)
 - **POST**: For sending data (body field appears)
 - **PUT**: For updating data (body field appears)
 - **DELETE**: For deleting resources
 
 ### 3. URL
+
 Enter the X402-enabled API endpoint:
+
 ```
 https://agnicbillo-proxy.asad-safari.workers.dev/v1/custom/chatgpt/v1/chat/completions
 ```
 
 ### 4. Headers (Optional)
+
 Click "Add Header" to add custom headers:
+
 - **Name**: `X-AgnicBillo-Key`
 - **Value**: `agb_qroy8w9rb5lnpcla8ydl`
 
 ### 5. Body (Only visible when POST/PUT selected)
+
 **IMPORTANT**: Body field only appears when Method is POST or PUT!
 
 Switch Method to POST, then enter JSON:
+
 ```json
 {
   "model": "gpt-3.5-turbo",
-  "messages": [{"role": "user", "content": "Say hello"}]
+  "messages": [{ "role": "user", "content": "Say hello" }]
 }
 ```
 
@@ -57,6 +65,7 @@ Switch Method to POST, then enter JSON:
 5. Returns protected content + payment details
 
 ### Expected Response:
+
 ```json
 {
   "data": "<!DOCTYPE html>...<h1>Protected Content</h1><p>Your payment was successful! Enjoy this banger song.</p>...",
@@ -84,7 +93,7 @@ For POST requests with JSON body:
    ```json
    {
      "model": "gpt-3.5-turbo",
-     "messages": [{"role": "user", "content": "Say hello"}]
+     "messages": [{ "role": "user", "content": "Say hello" }]
    }
    ```
 
@@ -93,16 +102,21 @@ Same automatic payment flow, returns ChatGPT response.
 ## Common Issues
 
 ### "I don't see the Body field!"
+
 **Solution**: Change Method from GET to POST. Body only shows for POST/PUT methods.
 
 ### "Payment signing failed"
+
 **Solution**:
+
 1. Check your AgnicWallet credentials are connected
 2. Ensure you have USDC balance on Base Sepolia
 3. Check backend URL is accessible
 
 ### "Request failed after payment"
+
 **Solution**:
+
 1. Verify the URL is correct
 2. Check headers are properly set
 3. Ensure JSON body is valid
@@ -121,16 +135,16 @@ For testing endpoints that don't require payment:
 N8N supports dynamic values using expressions:
 
 ### Dynamic Message:
+
 ```json
 {
   "model": "gpt-3.5-turbo",
-  "messages": [
-    {"role": "user", "content": "{{ $json.userMessage }}"}
-  ]
+  "messages": [{ "role": "user", "content": "{{ $json.userMessage }}" }]
 }
 ```
 
 ### Dynamic Headers:
+
 - Name: `X-API-Key`
 - Value: `{{ $json.apiKey }}`
 
