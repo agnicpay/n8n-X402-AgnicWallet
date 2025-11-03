@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2025-11-03
+
+### Changed
+- Migrated repository to standalone location: https://github.com/agnicpay/n8n-X402-AgnicWallet
+- Updated all documentation and links to point to new repository
+- No code changes - this is a metadata/documentation update only
+
+### Documentation
+- Enhanced README with backend API dependency explanation
+- Added comprehensive FAQ section
+- Added detailed security and trust model explanation
+- Updated all GitHub URLs to new standalone repository
+
 ## [1.0.3] - 2025-11-03
 
 ### Added
@@ -53,4 +66,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[1.0.4]: https://github.com/agnicpay/n8n-X402-AgnicWallet/releases/tag/v1.0.4
 [1.0.3]: https://github.com/agnicpay/n8n-X402-AgnicWallet/releases/tag/v1.0.3
