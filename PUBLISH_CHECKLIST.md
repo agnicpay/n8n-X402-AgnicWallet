@@ -73,7 +73,7 @@ git push origin v1.0.0
 
 ### 3. Create GitHub Release
 
-Go to: https://github.com/agnicpay/agnicwallet-project/releases/new
+Go to: https://github.com/agnicpay/n8n-X402-AgnicWallet/releases/new
 
 - **Tag**: v1.0.0
 - **Title**: n8n-nodes-agnicwallet v1.0.0
@@ -172,6 +172,6 @@ npm deprecate n8n-nodes-agnicwallet@1.0.0 "Please upgrade to 1.0.1"
 
 ## Support
 
-- **Issues**: https://github.com/agnicpay/agnicwallet-project/issues
-- **Docs**: https://github.com/agnicpay/agnicwallet-project
+- **Issues**: https://github.com/agnicpay/n8n-X402-AgnicWallet/issues
+- **Docs**: https://github.com/agnicpay/n8n-X402-AgnicWallet
 - **NPM**: https://www.npmjs.com/package/n8n-nodes-agnicwallet

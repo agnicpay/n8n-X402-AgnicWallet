@@ -7,7 +7,7 @@ import {
 export class AgnicWalletApi implements ICredentialType {
   name = "agnicWalletApi";
   displayName = "AgnicWallet API";
-  documentationUrl = "https://github.com/agnicpay/agnicwallet-project#setup";
+  documentationUrl = "https://github.com/agnicpay/n8n-X402-AgnicWallet#setup";
   properties: INodeProperties[] = [
     {
       displayName: "User ID",
