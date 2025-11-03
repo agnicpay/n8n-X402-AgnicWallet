@@ -18,17 +18,17 @@
     "solana"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/agnicpay/n8n-nodes-agnicwallet#readme",
+  "homepage": "https://github.com/asadsafari/n8n-nodes-agnicwallet#readme",
   "author": {
     "name": "AgnicWallet",
     "email": "support@agnicpay.xyz"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/agnicpay/n8n-nodes-agnicwallet.git"
+    "url": "https://github.com/asadsafari/n8n-nodes-agnicwallet.git"
   },
   "bugs": {
-    "url": "https://github.com/agnicpay/n8n-nodes-agnicwallet/issues"
+    "url": "https://github.com/asadsafari/n8n-nodes-agnicwallet/issues"
   },
   "main": "index.js",
   "scripts": {
