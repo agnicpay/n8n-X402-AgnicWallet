@@ -6,299 +6,31 @@ import {
   NodeOperationError,
   SupplyData,
 } from "n8n-workflow";
-import { BaseChatModel, BaseChatModelCallOptions } from "@langchain/core/language_models/chat_models";
-import {
-  BaseMessage,
-  AIMessage,
-  HumanMessage,
-  SystemMessage,
-  ChatMessage as LangChainChatMessage,
-} from "@langchain/core/messages";
-import {
-  ChatGeneration,
-  ChatResult,
-} from "@langchain/core/outputs";
-import { CallbackManagerForLLMRun } from "@langchain/core/callbacks/manager";
-import { StructuredToolInterface } from "@langchain/core/tools";
-
-interface ChatMessage {
-  role: "system" | "user" | "assistant";
-  content: string;
-}
-
-interface ChatCompletionsRequest {
-  model: string;
-  messages: ChatMessage[];
-  temperature?: number;
-  max_tokens?: number;
-  top_p?: number;
-  frequency_penalty?: number;
-  presence_penalty?: number;
-  stream?: boolean;
-  tools?: any[];
-}
+import { ChatOpenAI } from "@langchain/openai";
 
 /**
- * LangChain ChatModel implementation for AgnicPay AI Gateway
- * This properly implements the ChatModel interface so the Tools Agent can use it
+ * AgnicAI Chat Model Node for n8n
+ * 
+ * Uses LangChain's ChatOpenAI class with AgnicPay's OpenAI-compatible endpoint.
+ * This approach is identical to how n8n's built-in OpenAI Chat Model works,
+ * just pointing to AgnicPay's AI Gateway instead.
  */
-class AgnicChatModel extends BaseChatModel<BaseChatModelCallOptions> {
-  // This property is checked by n8n's Tools Agent at graph construction time
-  // It must be explicitly set to true for n8n to recognize tool calling support
-  // Making it public (not readonly) in case n8n needs to check or modify it
-  public supportsTools = true;
-
-  // n8n internal markers to identify this as an n8n ChatModel
-  // These help n8n's Tools Agent recognize it as a valid ChatModel
-  public readonly __n8nType = 'chatModel' as const;
-  public readonly __n8nChatModel = true;
-
-  private apiUrl: string;
-  private authHeader: string;
-  private model: string;
-  private temperature?: number;
-  private maxTokens?: number;
-  private topP?: number;
-  private frequencyPenalty?: number;
-  private presencePenalty?: number;
-  private tools?: StructuredToolInterface[];
-
-  constructor(config: {
-    apiUrl: string;
-    authHeader: string;
-    model: string;
-    temperature?: number;
-    maxTokens?: number;
-    topP?: number;
-    frequencyPenalty?: number;
-    presencePenalty?: number;
-    httpRequest: any;
-    logger?: any;
-  }) {
-    super({});
-    this.apiUrl = config.apiUrl;
-    this.authHeader = config.authHeader;
-    this.model = config.model;
-    this.temperature = config.temperature;
-    this.maxTokens = config.maxTokens;
-    this.topP = config.topP;
-    this.frequencyPenalty = config.frequencyPenalty;
-    this.presencePenalty = config.presencePenalty;
-    // Store httpRequest helper and logger
-    (this as any)._httpRequest = config.httpRequest;
-    (this as any)._logger = config.logger;
-    
-    // Add n8n Symbol marker after construction
-    // This is what n8n might check to identify ChatModels
-    (this as any)[Symbol.for('n8n.chatModel')] = true;
-  }
-
-  _llmType(): string {
-    return "agnic-ai";
-  }
-
-  /**
-   * Convert LangChain messages to OpenAI format
-   */
-  private convertMessagesToOpenAIFormat(messages: BaseMessage[]): ChatMessage[] {
-    return messages.map((msg) => {
-      if (msg instanceof HumanMessage) {
-        return {
-          role: "user" as const,
-          content: typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content),
-        };
-      } else if (msg instanceof AIMessage) {
-        return {
-          role: "assistant" as const,
-          content: typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content),
-        };
-      } else if (msg instanceof SystemMessage) {
-        return {
-          role: "system" as const,
-          content: typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content),
-        };
-      } else if (msg instanceof LangChainChatMessage) {
-        return {
-          role: (msg.role || "user") as "system" | "user" | "assistant",
-          content: typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content),
-        };
-      } else {
-        // Fallback for unknown message types
-        return {
-          role: "user" as const,
-          content: typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content),
-        };
-      }
-    });
-  }
-
-  /**
-   * Convert OpenAI tool format to LangChain format if needed
-   */
-  private convertToolsToOpenAIFormat(): any[] | undefined {
-    if (!this.tools || this.tools.length === 0) {
-      return undefined;
-    }
-
-    return this.tools.map((tool) => ({
-      type: "function",
-      function: {
-        name: tool.name,
-        description: tool.description,
-        parameters: tool.schema || {},
-      },
-    }));
-  }
-
-  /**
-   * Main generation method - called by LangChain
-   */
-  async _generate(
-    messages: BaseMessage[],
-    _options?: this["ParsedCallOptions"],
-    _runManager?: CallbackManagerForLLMRun,
-  ): Promise<ChatResult> {
-    const httpRequest = (this as any)._httpRequest;
-    const logger = (this as any)._logger;
-
-    if (!httpRequest) {
-      throw new Error("HTTP request helper not available");
-    }
-
-    logger?.info(`[AgnicChatModel] _generate called with ${messages.length} messages`);
-
-    // Convert LangChain messages to OpenAI format
-    const openAIMessages = this.convertMessagesToOpenAIFormat(messages);
-    logger?.info(`[AgnicChatModel] Converted to ${openAIMessages.length} OpenAI messages`);
-
-    // Build request body
-    const requestBody: ChatCompletionsRequest = {
-      model: this.model,
-      messages: openAIMessages,
-    };
-
-    // Add parameters if set
-    if (this.temperature !== undefined) {
-      requestBody.temperature = this.temperature;
-    }
-    if (this.maxTokens !== undefined) {
-      requestBody.max_tokens = this.maxTokens;
-    }
-    if (this.topP !== undefined) {
-      requestBody.top_p = this.topP;
-    }
-    if (this.frequencyPenalty !== undefined) {
-      requestBody.frequency_penalty = this.frequencyPenalty;
-    }
-    if (this.presencePenalty !== undefined) {
-      requestBody.presence_penalty = this.presencePenalty;
-    }
-
-    // Add tools if bound
-    const tools = this.convertToolsToOpenAIFormat();
-    if (tools && tools.length > 0) {
-      requestBody.tools = tools;
-      logger?.info(`[AgnicChatModel] Added ${tools.length} tools to request`);
-    }
-
-    logger?.info(`[AgnicChatModel] Calling AgnicPay AI Gateway: ${this.apiUrl}`);
-    logger?.info(`[AgnicChatModel] Model: ${this.model}`);
-    logger?.info(`[AgnicChatModel] Request body (preview): ${JSON.stringify(requestBody).substring(0, 500)}`);
-
-    try {
-      const response = await httpRequest({
-        method: "POST",
-        url: this.apiUrl,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: this.authHeader,
-        },
-        body: requestBody,
-        json: true,
-      });
-
-      logger?.info(`[AgnicChatModel] API request successful`);
-      logger?.info(`[AgnicChatModel] Response has choices: ${!!response.choices}, count: ${response.choices?.length || 0}`);
-
-      // Extract the message from response
-      const choice = response.choices?.[0];
-      if (!choice || !choice.message) {
-        throw new Error("Invalid response from AgnicPay AI Gateway: no message in response");
-      }
-
-      const message = choice.message;
-      const content = message.content || "";
-      const toolCalls = message.tool_calls;
-
-      logger?.info(`[AgnicChatModel] Message has tool_calls: ${!!toolCalls}, count: ${toolCalls?.length || 0}`);
-
-      // Create AIMessage with content and optional tool_calls
-      const aiMessage = new AIMessage({
-        content,
-        tool_calls: toolCalls,
-        response_metadata: {
-          model: response.model || this.model,
-          finish_reason: choice.finish_reason,
-          usage: response.usage,
-        },
-      });
-
-      // Return ChatResult with the generation
-      const generation: ChatGeneration = {
-        message: aiMessage,
-        text: content,
-      };
-
-      return {
-        generations: [generation],
-        llmOutput: {
-          model: response.model || this.model,
-          usage: response.usage,
-        },
-      };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-      logger?.error(`[AgnicChatModel] API request failed: ${errorMessage}`);
-      throw error;
-    }
-  }
-
-  /**
-   * Bind tools to the model - required for tool calling support
-   * LangChain expects immutability, so we return a new instance with tools bound
-   * This is important for multi-run agents
-   */
-  bindTools(tools: StructuredToolInterface[]): this {
-    const logger = (this as any)._logger;
-    logger?.info(`[AgnicChatModel] bindTools called with ${tools?.length || 0} tools`);
-    
-    // Return a new instance (immutable pattern as expected by LangChain)
-    const cloned = Object.create(Object.getPrototypeOf(this));
-    Object.assign(cloned, this);
-    cloned.tools = tools;
-    cloned.supportsTools = true; // Preserve the supportsTools property
-    cloned.__n8nType = 'chatModel'; // Preserve n8n markers
-    cloned.__n8nChatModel = true;
-    return cloned;
-  }
-}
-
 export class AgnicAILanguageModel implements INodeType {
   description: INodeTypeDescription = {
     displayName: "AgnicAI Chat Model",
     name: "lmChatAgnicAI",
+    icon: "file:AgnicAILanguageModel.png",
     group: ["transform"],
-    version: 1.7,
-    description:
-      "Access various language models through AgnicPay AI Gateway with X402 payment support. Can be used as a Chat Model in AI Agent nodes including Tools Agent. Messages are provided by the AI Agent node.",
+    version: [1, 1.1],
+    description: "Chat model using AgnicPay AI Gateway with X402 payment support",
     defaults: {
       name: "AgnicAI Chat Model",
     },
-    icon: "file:AgnicAILanguageModel.png",
     codex: {
       categories: ["AI"],
       subcategories: {
-        chatModels: ["tools"],
+        AI: ["Language Models", "Root Nodes"],
+        "Language Models": ["Chat Models (Recommended)"],
       },
       resources: {
         primaryDocumentation: [
@@ -310,6 +42,7 @@ export class AgnicAILanguageModel implements INodeType {
     },
     inputs: [],
     outputs: [NodeConnectionTypes.AiLanguageModel],
+    outputNames: ["Model"],
     credentials: [
       {
         name: "agnicWalletOAuth2Api",
@@ -347,7 +80,7 @@ export class AgnicAILanguageModel implements INodeType {
             description: "For CI/CD or programmatic access",
           },
         ],
-        default: "oAuth2",
+        default: "apiKey",
         description: "How to authenticate with AgnicWallet",
       },
       {
@@ -359,12 +92,11 @@ export class AgnicAILanguageModel implements INodeType {
         },
         options: [
           {
-            name: "Simple (GPT-4o Mini)",
+            name: "GPT-4o Mini (Fast & Affordable)",
             value: "openai/gpt-4o-mini",
-            description: "Fast and cost-effective",
           },
           {
-            name: "GPT-4o",
+            name: "GPT-4o (Best Quality)",
             value: "openai/gpt-4o",
           },
           {
@@ -408,24 +140,8 @@ export class AgnicAILanguageModel implements INodeType {
             value: "mistralai/mistral-large",
           },
           {
-            name: "Mistral Medium",
-            value: "mistralai/mistral-medium",
-          },
-          {
-            name: "Mixtral 8x7B",
-            value: "mistralai/mixtral-8x7b-instruct",
-          },
-          {
             name: "Mixtral 8x22B",
             value: "mistralai/mixtral-8x22b-instruct",
-          },
-          {
-            name: "Pi 4",
-            value: "inflection/inflection-2.5",
-          },
-          {
-            name: "Qwen 2.5 72B",
-            value: "qwen/qwen-2.5-72b-instruct",
           },
           {
             name: "DeepSeek R1",
@@ -436,13 +152,13 @@ export class AgnicAILanguageModel implements INodeType {
             value: "deepseek/deepseek-chat",
           },
           {
-            name: "Yi 1.5 34B",
-            value: "01-ai/yi-1.5-34b-chat",
+            name: "Qwen 2.5 72B",
+            value: "qwen/qwen-2.5-72b-instruct",
           },
         ],
         default: "openai/gpt-4o-mini",
         description:
-          "Select a model from OpenRouter. You can also type a custom model ID. See https://openrouter.ai/models for all available models.",
+          "Select a model or type a custom OpenRouter model ID. See https://openrouter.ai/models for all available models.",
       },
       {
         displayName: "Options",
@@ -460,22 +176,22 @@ export class AgnicAILanguageModel implements INodeType {
               maxValue: 2,
               numberStepSize: 0.1,
             },
-            default: 1,
+            default: 0.7,
             description: "Controls randomness: Lower = more focused and deterministic",
           },
           {
             displayName: "Max Tokens",
-            name: "max_tokens",
+            name: "maxTokens",
             type: "number",
             typeOptions: {
               minValue: 1,
             },
-            default: 1024,
+            default: 2048,
             description: "Maximum number of tokens to generate",
           },
           {
             displayName: "Top P",
-            name: "top_p",
+            name: "topP",
             type: "number",
             typeOptions: {
               minValue: 0,
@@ -487,7 +203,7 @@ export class AgnicAILanguageModel implements INodeType {
           },
           {
             displayName: "Frequency Penalty",
-            name: "frequency_penalty",
+            name: "frequencyPenalty",
             type: "number",
             typeOptions: {
               minValue: -2,
@@ -495,11 +211,11 @@ export class AgnicAILanguageModel implements INodeType {
               numberStepSize: 0.1,
             },
             default: 0,
-            description: "Penalizes new tokens based on their frequency in the text so far",
+            description: "Penalizes new tokens based on frequency in text so far",
           },
           {
             displayName: "Presence Penalty",
-            name: "presence_penalty",
+            name: "presencePenalty",
             type: "number",
             typeOptions: {
               minValue: -2,
@@ -507,7 +223,14 @@ export class AgnicAILanguageModel implements INodeType {
               numberStepSize: 0.1,
             },
             default: 0,
-            description: "Penalizes new tokens based on whether they appear in the text so far",
+            description: "Penalizes new tokens based on presence in text so far",
+          },
+          {
+            displayName: "Timeout",
+            name: "timeout",
+            type: "number",
+            default: 60000,
+            description: "Request timeout in milliseconds",
           },
         ],
       },
@@ -520,81 +243,86 @@ export class AgnicAILanguageModel implements INodeType {
   ): Promise<SupplyData> {
     this.logger?.info(`[AgnicAI] supplyData called for itemIndex: ${itemIndex}`);
 
-    // Get authentication
+    // Get authentication type and credentials
     const authentication = this.getNodeParameter("authentication", itemIndex) as string;
-    let authHeader: string;
+    let apiKey: string;
 
     try {
       if (authentication === "oAuth2") {
-        this.logger?.info(`[AgnicAI] Authentication type: oAuth2`);
-        this.logger?.info(`[AgnicAI] Getting OAuth2 credentials...`);
+        this.logger?.info(`[AgnicAI] Using OAuth2 authentication`);
         const credentials = (await this.getCredentials(
           "agnicWalletOAuth2Api",
           itemIndex,
         )) as any;
-        authHeader = `Bearer ${credentials.oauthTokenData.access_token}`;
-        this.logger?.info(`[AgnicAI] OAuth2 token obtained`);
+        apiKey = credentials.oauthTokenData?.access_token;
+        if (!apiKey) {
+          throw new Error("OAuth2 access token not found. Please reconnect your AgnicWallet account.");
+        }
       } else {
-        this.logger?.info(`[AgnicAI] Authentication type: apiKey`);
-        this.logger?.info(`[AgnicAI] Getting API Key credentials...`);
-        const credentials = await this.getCredentials(
-          "agnicWalletApi",
-          itemIndex,
-        );
-        const { apiToken } = credentials as { apiToken: string };
-        authHeader = `Bearer ${String(apiToken)}`;
-        this.logger?.info(`[AgnicAI] API Key obtained (length: ${authHeader.length})`);
+        this.logger?.info(`[AgnicAI] Using API Key authentication`);
+        const credentials = await this.getCredentials("agnicWalletApi", itemIndex);
+        apiKey = (credentials as { apiToken: string }).apiToken;
+        if (!apiKey) {
+          throw new Error("API Key not found. Please configure your AgnicWallet API credentials.");
+        }
       }
+      this.logger?.info(`[AgnicAI] Credentials obtained successfully`);
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
-      this.logger?.error(`[AgnicAI] Failed to get credentials: ${errorMsg}`);
+      this.logger?.error(`[AgnicAI] Credential error: ${errorMsg}`);
       throw new NodeOperationError(
         this.getNode(),
-        `Failed to get credentials: ${errorMsg}`,
+        `Authentication failed: ${errorMsg}`,
         { itemIndex },
       );
     }
 
     // Get model parameter
-    const modelParam = this.getNodeParameter("model", itemIndex) as string;
-    const model = modelParam?.trim();
+    const model = this.getNodeParameter("model", itemIndex) as string;
+    this.logger?.info(`[AgnicAI] Model: ${model}`);
 
-    this.logger?.info(`[AgnicAI] Model parameter: "${modelParam}" -> "${model}"`);
-
-    if (!model || model === "") {
+    if (!model?.trim()) {
       throw new NodeOperationError(
         this.getNode(),
-        "Model must be specified. Enter an OpenRouter model ID (e.g., 'openai/gpt-4o' or 'anthropic/claude-3.5-sonnet'). See https://openrouter.ai/models for all available models.",
+        "Model must be specified. Select from dropdown or enter a custom OpenRouter model ID.",
         { itemIndex },
       );
     }
 
     // Get options
-    const options = this.getNodeParameter("options", itemIndex, {}) as any;
+    const options = this.getNodeParameter("options", itemIndex, {}) as {
+      temperature?: number;
+      maxTokens?: number;
+      topP?: number;
+      frequencyPenalty?: number;
+      presencePenalty?: number;
+      timeout?: number;
+    };
 
-    // Create the ChatModel instance
-    const chatModel = new AgnicChatModel({
-      apiUrl: "https://api.agnicpay.xyz/v1/chat/completions",
-      authHeader,
+    // Create ChatOpenAI instance pointing to AgnicPay's endpoint
+    // This is the same approach n8n's built-in OpenAI Chat Model uses
+    const chatModel = new ChatOpenAI({
+      apiKey,
       model: model.trim(),
       temperature: options.temperature,
-      maxTokens: options.max_tokens,
-      topP: options.top_p,
-      frequencyPenalty: options.frequency_penalty,
-      presencePenalty: options.presence_penalty,
-      httpRequest: this.helpers.httpRequest.bind(this.helpers),
-      logger: this.logger,
+      maxTokens: options.maxTokens,
+      topP: options.topP,
+      frequencyPenalty: options.frequencyPenalty,
+      presencePenalty: options.presencePenalty,
+      timeout: options.timeout ?? 60000,
+      maxRetries: 2,
+      configuration: {
+        baseURL: "https://api.agnicpay.xyz/v1",
+      },
     });
 
-    this.logger?.info(`[AgnicAI] Created AgnicChatModel instance for model: ${model}`);
-    this.logger?.info(`[AgnicAI] Node declared as tools-capable chat model via codex.subcategories.chatModels`);
-    this.logger?.info(`[AgnicAI] ChatModel instance has supportsTools: ${chatModel.supportsTools}`);
+    this.logger?.info(`[AgnicAI] Created ChatOpenAI instance with AgnicPay baseURL`);
+    this.logger?.info(`[AgnicAI] Model: ${model}, BaseURL: https://api.agnicpay.xyz/v1`);
 
-    // Return the ChatModel instance as ai_languageModel property
-    // n8n expects this format to properly integrate with the AI Agent
-    // The Tools Agent checks if this supports tool calling via bindTools()
+    // Return in the same format as n8n's built-in OpenAI Chat Model
+    // This is the critical part - n8n expects { response: model }
     return {
-      ai_languageModel: chatModel,
-    } as any as SupplyData;
+      response: chatModel,
+    };
   }
 }
