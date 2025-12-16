@@ -8,11 +8,9 @@ credentials/
 tsconfig.json
 gulpfile.js
 
-# Documentation (keep README.md, exclude others)
+# Documentation (keep README.md and LICENSE)
 CONTRIBUTING.md
 CODE_OF_CONDUCT.md
-PUBLISHING.md
-PUBLISH_CHECKLIST.md
 CHANGELOG.md
 examples/
 
@@ -44,15 +42,14 @@ coverage/
 
 # Build artifacts
 *.log
+*.tgz
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
 
 # Environment files
 .env
 .env.local
 .env.*.local
 
-# Misc
-.npmrc
+# Docker files
+.dockerignore

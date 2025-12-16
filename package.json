@@ -15,7 +15,10 @@
     "automation",
     "workflow",
     "base",
-    "solana"
+    "solana",
+    "mcp",
+    "model-context-protocol",
+    "ai-agent"
   ],
   "license": "MIT",
   "homepage": "https://github.com/agnicpay/n8n-X402-AgnicWallet#readme",
@@ -50,13 +53,20 @@
     "nodes": [
       "dist/nodes/X402HttpRequest/X402HttpRequest.node.js",
       "dist/nodes/AgnicAILanguageModel/AgnicAILanguageModel.node.js",
-      "dist/nodes/AgnicAI/AgnicAI.node.js"
+      "dist/nodes/AgnicAI/AgnicAI.node.js",
+      "dist/nodes/AgnicMCPTool/AgnicMCPTool.node.js"
     ]
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.24.0",
+    "@n8n/json-schema-to-zod": "^1.6.0",
+    "zod": "^3.23.0"
   },
   "devDependencies": {
     "@langchain/core": "^0.3.68",
     "@langchain/openai": "^0.6.16",
     "@types/node": "^20.10.0",
+    "langchain": "^0.3.33",
     "@typescript-eslint/parser": "^6.13.0",
     "eslint": "^8.54.0",
     "eslint-plugin-n8n-nodes-base": "^1.16.1",
@@ -66,6 +76,8 @@
     "typescript": "^5.3.0"
   },
   "peerDependencies": {
+    "@langchain/core": "*",
+    "langchain": "*",
     "n8n-workflow": "*"
   }
 }
