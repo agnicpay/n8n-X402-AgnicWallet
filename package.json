@@ -48,10 +48,13 @@
       "dist/credentials/AgnicWalletOAuth2Api.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/X402HttpRequest/X402HttpRequest.node.js"
+      "dist/nodes/X402HttpRequest/X402HttpRequest.node.js",
+      "dist/nodes/AgnicAILanguageModel/AgnicAILanguageModel.node.js",
+      "dist/nodes/AgnicAI/AgnicAI.node.js"
     ]
   },
   "devDependencies": {
+    "@langchain/core": "^0.3.68",
     "@types/node": "^20.10.0",
     "@typescript-eslint/parser": "^6.13.0",
     "eslint": "^8.54.0",

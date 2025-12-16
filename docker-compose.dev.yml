@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: agnic-wallet-n8n
+    restart: unless-stopped
+    ports:
+      - "3006:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=false
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://localhost:3006/
+    volumes:
+      # n8n data directory
+      - ~/.n8n:/home/node/.n8n
+      # Mount the package tarball (build first: npm run build && npm pack)
+      - ./n8n-nodes-agnicwallet-*.tgz:/tmp/package.tgz:ro
+      # Mount the init script
+      - ./docker-init.sh:/docker-init.sh:ro
+    entrypoint: /docker-init.sh
+

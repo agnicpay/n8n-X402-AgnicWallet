@@ -16,8 +16,8 @@ export class X402HttpRequest implements INodeType {
       "Make HTTP requests to X402-enabled APIs with automatic payment via AgnicWallet",
     defaults: {
       name: "AgnicWallet X402",
-      icon: "file:X402HttpRequest.svg",
     },
+    icon: "file:X402HttpRequest.png",
     usableAsTool: true,
     inputs: ["main"],
     outputs: ["main"],
