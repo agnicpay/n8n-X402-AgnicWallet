@@ -19,13 +19,16 @@ import type { LLMResult } from "@langchain/core/outputs";
  */
 class AgnicLlmTracing extends BaseCallbackHandler {
   name = "AgnicLlmTracing";
-  
+
   // This flag makes LangChain wait for handlers before continuing
   awaitHandlers = true;
-  
+
   private executionFunctions: ISupplyDataFunctions;
   private connectionType = NodeConnectionTypes.AiLanguageModel;
-  private runsMap: Record<string, { index: number; options: any; messages: string[] }> = {};
+  private runsMap: Record<
+    string,
+    { index: number; options: any; messages: string[] }
+  > = {};
 
   constructor(executionFunctions: ISupplyDataFunctions) {
     super();
@@ -38,7 +41,7 @@ class AgnicLlmTracing extends BaseCallbackHandler {
     runId: string,
   ): Promise<void> {
     const options = (llm as any).kwargs || llm;
-    
+
     // Add input data to n8n's execution context
     // This triggers the spinning indicator
     const { index } = this.executionFunctions.addInputData(
@@ -64,7 +67,7 @@ class AgnicLlmTracing extends BaseCallbackHandler {
 
     // Parse the response
     const generations = output.generations.map((gen) =>
-      gen.map((g) => ({ text: g.text, generationInfo: g.generationInfo }))
+      gen.map((g) => ({ text: g.text, generationInfo: g.generationInfo })),
     );
 
     const response = {
@@ -88,10 +91,7 @@ class AgnicLlmTracing extends BaseCallbackHandler {
     });
   }
 
-  async handleLLMError(
-    error: Error,
-    runId: string,
-  ): Promise<void> {
+  async handleLLMError(error: Error, runId: string): Promise<void> {
     const runDetails = this.runsMap[runId] ?? { index: 0 };
 
     // Add error output
@@ -114,7 +114,7 @@ class AgnicLlmTracing extends BaseCallbackHandler {
     try {
       (this.executionFunctions as any).logAiEvent?.(
         event,
-        data ? jsonStringify(data) : undefined
+        data ? jsonStringify(data) : undefined,
       );
     } catch {
       // Silently ignore if logAiEvent is not available
@@ -124,7 +124,7 @@ class AgnicLlmTracing extends BaseCallbackHandler {
 
 /**
  * AgnicAI Chat Model Node for n8n
- * 
+ *
  * Uses LangChain's ChatOpenAI class with AgnicPay's OpenAI-compatible endpoint.
  * This approach is identical to how n8n's built-in OpenAI Chat Model works,
  * just pointing to AgnicPay's AI Gateway instead.
@@ -136,7 +136,8 @@ export class AgnicAILanguageModel implements INodeType {
     icon: "file:AgnicAILanguageModel.png",
     group: ["transform"],
     version: [1, 1.1],
-    description: "Chat model using AgnicPay AI Gateway with X402 payment support",
+    description:
+      "Chat model using AgnicPay AI Gateway with X402 payment support",
     defaults: {
       name: "AgnicAI Chat Model",
     },
@@ -291,7 +292,8 @@ export class AgnicAILanguageModel implements INodeType {
               numberStepSize: 0.1,
             },
             default: 0.7,
-            description: "Controls randomness: Lower = more focused and deterministic",
+            description:
+              "Controls randomness: Lower = more focused and deterministic",
           },
           {
             displayName: "Max Tokens",
@@ -313,7 +315,8 @@ export class AgnicAILanguageModel implements INodeType {
               numberStepSize: 0.1,
             },
             default: 1,
-            description: "Nucleus sampling: considers tokens with top_p probability mass",
+            description:
+              "Nucleus sampling: considers tokens with top_p probability mass",
           },
           {
             displayName: "Frequency Penalty",
@@ -325,7 +328,8 @@ export class AgnicAILanguageModel implements INodeType {
               numberStepSize: 0.1,
             },
             default: 0,
-            description: "Penalizes new tokens based on frequency in text so far",
+            description:
+              "Penalizes new tokens based on frequency in text so far",
           },
           {
             displayName: "Presence Penalty",
@@ -337,7 +341,8 @@ export class AgnicAILanguageModel implements INodeType {
               numberStepSize: 0.1,
             },
             default: 0,
-            description: "Penalizes new tokens based on presence in text so far",
+            description:
+              "Penalizes new tokens based on presence in text so far",
           },
           {
             displayName: "Timeout",
@@ -356,7 +361,10 @@ export class AgnicAILanguageModel implements INodeType {
     itemIndex: number,
   ): Promise<SupplyData> {
     // Get authentication type and credentials
-    const authentication = this.getNodeParameter("authentication", itemIndex) as string;
+    const authentication = this.getNodeParameter(
+      "authentication",
+      itemIndex,
+    ) as string;
     let apiKey: string;
 
     try {
@@ -367,13 +375,20 @@ export class AgnicAILanguageModel implements INodeType {
         )) as any;
         apiKey = credentials.oauthTokenData?.access_token;
         if (!apiKey) {
-          throw new Error("OAuth2 access token not found. Please reconnect your AgnicWallet account.");
+          throw new Error(
+            "OAuth2 access token not found. Please reconnect your AgnicWallet account.",
+          );
         }
       } else {
-        const credentials = await this.getCredentials("agnicWalletApi", itemIndex);
+        const credentials = await this.getCredentials(
+          "agnicWalletApi",
+          itemIndex,
+        );
         apiKey = (credentials as { apiToken: string }).apiToken;
         if (!apiKey) {
-          throw new Error("API Key not found. Please configure your AgnicWallet API credentials.");
+          throw new Error(
+            "API Key not found. Please configure your AgnicWallet API credentials.",
+          );
         }
       }
     } catch (error) {

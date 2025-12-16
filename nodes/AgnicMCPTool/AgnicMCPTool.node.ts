@@ -61,7 +61,7 @@ function convertJsonSchemaToZod(schema: unknown): z.ZodTypeAny {
  */
 function mcpToolToDynamicTool(
   tool: McpToolType,
-  callTool: (name: string, args: Record<string, unknown>) => Promise<unknown>
+  callTool: (name: string, args: Record<string, unknown>) => Promise<unknown>,
 ): DynamicStructuredTool {
   // Convert JSON Schema to Zod schema using proper library
   const zodSchema = convertJsonSchemaToZod(tool.inputSchema);
@@ -79,7 +79,8 @@ function mcpToolToDynamicTool(
         }
         return JSON.stringify(result);
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
         return `Error calling ${tool.name}: ${errorMessage}`;
       }
     },
@@ -190,7 +191,9 @@ export class AgnicMCPTool implements INodeType {
     const returnData: INodeExecutionData[] = [];
 
     // Get authentication
-    const authentication = this.getNodeParameter("authentication", 0) as "oAuth2" | "apiKey";
+    const authentication = this.getNodeParameter("authentication", 0) as
+      | "oAuth2"
+      | "apiKey";
     let accessToken: string | undefined;
 
     try {
@@ -200,22 +203,36 @@ export class AgnicMCPTool implements INodeType {
         };
         accessToken = creds?.oauthTokenData?.access_token;
       } else {
-        const creds = (await this.getCredentials("agnicWalletApi")) as { apiToken: string };
+        const creds = (await this.getCredentials("agnicWalletApi")) as {
+          apiToken: string;
+        };
         accessToken = creds?.apiToken;
       }
     } catch {
-      throw new NodeOperationError(node, "Failed to load AgnicWallet credentials.");
+      throw new NodeOperationError(
+        node,
+        "Failed to load AgnicWallet credentials.",
+      );
     }
 
     if (!accessToken) {
-      throw new NodeOperationError(node, "Missing AgnicWallet authentication token.");
+      throw new NodeOperationError(
+        node,
+        "Missing AgnicWallet authentication token.",
+      );
     }
 
     // Connect to MCP server
-    const transport = new StreamableHTTPClientTransport(new URL(AGNIC_MCP_ENDPOINT), {
-      requestInit: { headers: { Authorization: `Bearer ${accessToken}` } },
-    });
-    const client = new Client({ name: "agnic-mcp-client", version: "1.0.0" }, { capabilities: {} });
+    const transport = new StreamableHTTPClientTransport(
+      new URL(AGNIC_MCP_ENDPOINT),
+      {
+        requestInit: { headers: { Authorization: `Bearer ${accessToken}` } },
+      },
+    );
+    const client = new Client(
+      { name: "agnic-mcp-client", version: "1.0.0" },
+      { capabilities: {} },
+    );
 
     try {
       await client.connect(transport);
@@ -227,25 +244,36 @@ export class AgnicMCPTool implements INodeType {
 
         // Expect input to have a 'tool' property with the tool name
         if (!item.json.tool || typeof item.json.tool !== "string") {
-          throw new NodeOperationError(node, "Tool name not found in item.json.tool", { itemIndex });
+          throw new NodeOperationError(
+            node,
+            "Tool name not found in item.json.tool",
+            { itemIndex },
+          );
         }
 
         const toolName = item.json.tool as string;
         const matchingTool = mcpTools.find((t) => t.name === toolName);
 
         if (!matchingTool) {
-          throw new NodeOperationError(node, `Tool "${toolName}" not found`, { itemIndex });
+          throw new NodeOperationError(node, `Tool "${toolName}" not found`, {
+            itemIndex,
+          });
         }
 
         // Extract tool arguments (everything except 'tool' property)
         const { tool: _, ...toolArguments } = item.json;
 
-        const result = await client.callTool({ name: toolName, arguments: toolArguments });
+        const result = await client.callTool({
+          name: toolName,
+          arguments: toolArguments,
+        });
 
         // Extract text content from result
         let responseContent: unknown = result;
         if (result.content && Array.isArray(result.content)) {
-          const textContent = result.content.find((c: { type: string }) => c.type === "text");
+          const textContent = result.content.find(
+            (c: { type: string }) => c.type === "text",
+          );
           if (textContent && "text" in textContent) {
             responseContent = textContent.text;
           }
@@ -278,14 +306,14 @@ export class AgnicMCPTool implements INodeType {
    */
   async supplyData(
     this: ISupplyDataFunctions,
-    itemIndex: number
+    itemIndex: number,
   ): Promise<SupplyData> {
     // ─────────────────────────────────────────────
     // Authentication
     // ─────────────────────────────────────────────
     const authentication = this.getNodeParameter(
       "authentication",
-      itemIndex
+      itemIndex,
     ) as "oAuth2" | "apiKey";
 
     let accessToken: string | undefined;
@@ -294,14 +322,14 @@ export class AgnicMCPTool implements INodeType {
       if (authentication === "oAuth2") {
         const creds = (await this.getCredentials(
           "agnicWalletOAuth2Api",
-          itemIndex
+          itemIndex,
         )) as { oauthTokenData?: { access_token?: string } };
 
         accessToken = creds?.oauthTokenData?.access_token;
       } else {
         const creds = (await this.getCredentials(
           "agnicWalletApi",
-          itemIndex
+          itemIndex,
         )) as { apiToken: string };
 
         accessToken = creds?.apiToken;
@@ -310,7 +338,7 @@ export class AgnicMCPTool implements INodeType {
       throw new NodeOperationError(
         this.getNode(),
         "Failed to load AgnicWallet credentials. Please configure your credentials.",
-        { itemIndex }
+        { itemIndex },
       );
     }
 
@@ -318,7 +346,7 @@ export class AgnicMCPTool implements INodeType {
       throw new NodeOperationError(
         this.getNode(),
         "Missing AgnicWallet authentication token. Please check your credentials configuration.",
-        { itemIndex }
+        { itemIndex },
       );
     }
 
@@ -339,13 +367,13 @@ export class AgnicMCPTool implements INodeType {
               Authorization: `Bearer ${accessToken}`,
             },
           },
-        }
+        },
       );
 
       // Create MCP client
       client = new Client(
         { name: "agnic-mcp-client", version: "1.0.0" },
-        { capabilities: {} }
+        { capabilities: {} },
       );
 
       // Connect to MCP server
@@ -361,14 +389,14 @@ export class AgnicMCPTool implements INodeType {
         throw new NodeOperationError(
           this.getNode(),
           "No tools available from AgnicPay MCP server. Please check your authentication and try again.",
-          { itemIndex }
+          { itemIndex },
         );
       }
 
       // Create a tool caller function
       const callTool = async (
         name: string,
-        args: Record<string, unknown>
+        args: Record<string, unknown>,
       ): Promise<unknown> => {
         if (!client) {
           throw new Error("MCP client is not connected");
@@ -382,7 +410,7 @@ export class AgnicMCPTool implements INodeType {
         // Extract content from the result
         if (result.content && Array.isArray(result.content)) {
           const textContent = result.content.find(
-            (c: { type: string }) => c.type === "text"
+            (c: { type: string }) => c.type === "text",
           );
           if (textContent && "text" in textContent) {
             return textContent.text;
@@ -394,7 +422,7 @@ export class AgnicMCPTool implements INodeType {
 
       // Convert MCP tools to LangChain DynamicStructuredTools
       const langchainTools = mcpTools.map((tool) =>
-        mcpToolToDynamicTool(tool, callTool)
+        mcpToolToDynamicTool(tool, callTool),
       );
 
       // Wrap tools in a Toolkit for n8n AI Agent compatibility
@@ -443,7 +471,7 @@ export class AgnicMCPTool implements INodeType {
       throw new NodeOperationError(
         this.getNode(),
         `Failed to connect to AgnicPay MCP server: ${errorMessage}`,
-        { itemIndex }
+        { itemIndex },
       );
     }
   }

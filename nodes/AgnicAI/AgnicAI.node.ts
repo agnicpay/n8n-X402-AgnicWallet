@@ -438,7 +438,10 @@ export class AgnicAI implements INodeType {
         // Format response
         const formattedResponse: any = {
           ...response,
-          content: response.choices?.[0]?.message?.content || response.choices?.[0]?.text || response.content,
+          content:
+            response.choices?.[0]?.message?.content ||
+            response.choices?.[0]?.text ||
+            response.content,
           role: response.choices?.[0]?.message?.role || "assistant",
         };
 
@@ -484,4 +487,3 @@ export class AgnicAI implements INodeType {
     return [returnData];
   }
 }
-
