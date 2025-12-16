@@ -5,8 +5,122 @@ import {
   NodeConnectionTypes,
   NodeOperationError,
   SupplyData,
+  jsonStringify,
 } from "n8n-workflow";
 import { ChatOpenAI } from "@langchain/openai";
+import { BaseCallbackHandler } from "@langchain/core/callbacks/base";
+import type { Serialized } from "@langchain/core/load/serializable";
+import type { LLMResult } from "@langchain/core/outputs";
+
+/**
+ * Custom LLM Tracing callback for AgnicAI
+ * This enables the spinning indicator and AI Agent logging
+ * Mirrors n8n's internal N8nLlmTracing implementation
+ */
+class AgnicLlmTracing extends BaseCallbackHandler {
+  name = "AgnicLlmTracing";
+  
+  // This flag makes LangChain wait for handlers before continuing
+  awaitHandlers = true;
+  
+  private executionFunctions: ISupplyDataFunctions;
+  private connectionType = NodeConnectionTypes.AiLanguageModel;
+  private runsMap: Record<string, { index: number; options: any; messages: string[] }> = {};
+
+  constructor(executionFunctions: ISupplyDataFunctions) {
+    super();
+    this.executionFunctions = executionFunctions;
+  }
+
+  async handleLLMStart(
+    llm: Serialized,
+    prompts: string[],
+    runId: string,
+  ): Promise<void> {
+    const options = (llm as any).kwargs || llm;
+    
+    // Add input data to n8n's execution context
+    // This triggers the spinning indicator
+    const { index } = this.executionFunctions.addInputData(
+      this.connectionType,
+      [[{ json: { messages: prompts, options } }]],
+    );
+
+    this.runsMap[runId] = {
+      index,
+      options,
+      messages: prompts,
+    };
+
+    // Log AI event for the AI Agent's log panel
+    this.logAiEvent("ai-llm-generated-output-started", {
+      messages: prompts,
+      options,
+    });
+  }
+
+  async handleLLMEnd(output: LLMResult, runId: string): Promise<void> {
+    const runDetails = this.runsMap[runId] ?? { index: 0 };
+
+    // Parse the response
+    const generations = output.generations.map((gen) =>
+      gen.map((g) => ({ text: g.text, generationInfo: g.generationInfo }))
+    );
+
+    const response = {
+      generations,
+      llmOutput: output.llmOutput,
+    };
+
+    // Add output data to n8n's execution context
+    // This stops the spinning indicator and shows success
+    this.executionFunctions.addOutputData(
+      this.connectionType,
+      runDetails.index,
+      [[{ json: response }]],
+    );
+
+    // Log AI event for the AI Agent's log panel
+    this.logAiEvent("ai-llm-generated-output", {
+      messages: runDetails.messages,
+      options: runDetails.options,
+      response,
+    });
+  }
+
+  async handleLLMError(
+    error: Error,
+    runId: string,
+  ): Promise<void> {
+    const runDetails = this.runsMap[runId] ?? { index: 0 };
+
+    // Add error output
+    this.executionFunctions.addOutputData(
+      this.connectionType,
+      runDetails.index,
+      new NodeOperationError(this.executionFunctions.getNode(), error, {
+        functionality: "configuration-node",
+      }),
+    );
+
+    // Log AI error event
+    this.logAiEvent("ai-llm-errored", {
+      error: error.message || String(error),
+      runId,
+    });
+  }
+
+  private logAiEvent(event: string, data?: object): void {
+    try {
+      (this.executionFunctions as any).logAiEvent?.(
+        event,
+        data ? jsonStringify(data) : undefined
+      );
+    } catch {
+      // Silently ignore if logAiEvent is not available
+    }
+  }
+}
 
 /**
  * AgnicAI Chat Model Node for n8n
@@ -241,15 +355,12 @@ export class AgnicAILanguageModel implements INodeType {
     this: ISupplyDataFunctions,
     itemIndex: number,
   ): Promise<SupplyData> {
-    this.logger?.info(`[AgnicAI] supplyData called for itemIndex: ${itemIndex}`);
-
     // Get authentication type and credentials
     const authentication = this.getNodeParameter("authentication", itemIndex) as string;
     let apiKey: string;
 
     try {
       if (authentication === "oAuth2") {
-        this.logger?.info(`[AgnicAI] Using OAuth2 authentication`);
         const credentials = (await this.getCredentials(
           "agnicWalletOAuth2Api",
           itemIndex,
@@ -259,17 +370,14 @@ export class AgnicAILanguageModel implements INodeType {
           throw new Error("OAuth2 access token not found. Please reconnect your AgnicWallet account.");
         }
       } else {
-        this.logger?.info(`[AgnicAI] Using API Key authentication`);
         const credentials = await this.getCredentials("agnicWalletApi", itemIndex);
         apiKey = (credentials as { apiToken: string }).apiToken;
         if (!apiKey) {
           throw new Error("API Key not found. Please configure your AgnicWallet API credentials.");
         }
       }
-      this.logger?.info(`[AgnicAI] Credentials obtained successfully`);
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
-      this.logger?.error(`[AgnicAI] Credential error: ${errorMsg}`);
       throw new NodeOperationError(
         this.getNode(),
         `Authentication failed: ${errorMsg}`,
@@ -279,7 +387,6 @@ export class AgnicAILanguageModel implements INodeType {
 
     // Get model parameter
     const model = this.getNodeParameter("model", itemIndex) as string;
-    this.logger?.info(`[AgnicAI] Model: ${model}`);
 
     if (!model?.trim()) {
       throw new NodeOperationError(
@@ -300,7 +407,7 @@ export class AgnicAILanguageModel implements INodeType {
     };
 
     // Create ChatOpenAI instance pointing to AgnicPay's endpoint
-    // This is the same approach n8n's built-in OpenAI Chat Model uses
+    // Pass our custom tracing callback to enable spinning indicator and logging
     const chatModel = new ChatOpenAI({
       apiKey,
       model: model.trim(),
@@ -314,13 +421,11 @@ export class AgnicAILanguageModel implements INodeType {
       configuration: {
         baseURL: "https://api.agnicpay.xyz/v1",
       },
+      // Add our custom tracing callback for spinning indicator and AI Agent logging
+      callbacks: [new AgnicLlmTracing(this)],
     });
 
-    this.logger?.info(`[AgnicAI] Created ChatOpenAI instance with AgnicPay baseURL`);
-    this.logger?.info(`[AgnicAI] Model: ${model}, BaseURL: https://api.agnicpay.xyz/v1`);
-
     // Return in the same format as n8n's built-in OpenAI Chat Model
-    // This is the critical part - n8n expects { response: model }
     return {
       response: chatModel,
     };
