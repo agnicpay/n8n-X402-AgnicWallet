@@ -18,8 +18,9 @@ import { jsonSchemaToZod } from "@n8n/json-schema-to-zod";
 import type { Tool as McpToolType } from "@modelcontextprotocol/sdk/types.js";
 
 /**
- * Toolkit class that wraps MCP tools for n8n AI Agent
- * Extends Toolkit from langchain/agents for proper serialization
+ * Toolkit class that wraps MCP tools for n8n AI Agent.
+ * MUST extend Toolkit for n8n's instanceof check to pass.
+ * Resolves to n8n's bundled langchain@0.3.x at runtime.
  */
 class AgnicMcpToolkit extends Toolkit {
   constructor(public tools: DynamicStructuredTool[]) {
@@ -425,7 +426,8 @@ export class AgnicMCPTool implements INodeType {
         mcpToolToDynamicTool(tool, callTool),
       );
 
-      // Wrap tools in a Toolkit for n8n AI Agent compatibility
+      // Wrap in Toolkit for n8n AI Agent compatibility
+      // n8n checks: toolkit instanceof Toolkit, then calls getTools()
       const toolkit = new AgnicMcpToolkit(langchainTools);
 
       // Store references for cleanup

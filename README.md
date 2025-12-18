@@ -33,17 +33,30 @@ AgnicWallet is a non-custodial Web3 wallet service that handles blockchain payme
 
 ## Installation
 
-### For self-hosted N8N:
+### For self-hosted n8n (Recommended Method):
+
+Install in the n8n custom nodes directory:
 
 ```bash
-npm install -g n8n-nodes-agnicwallet
+cd ~/.n8n/nodes
+npm init -y  # Only needed first time
+npm install n8n-nodes-agnicwallet --legacy-peer-deps
 ```
 
-Then restart N8N:
+Then restart n8n:
 
 ```bash
 n8n start
 ```
+
+> **Why `--legacy-peer-deps`?**
+>
+> This flag prevents npm from installing conflicting versions of `langchain`. Our node uses n8n's built-in `langchain@0.3.x`, but other community nodes may require `langchain@1.x`. Without this flag, npm may fail with dependency conflicts or install an incompatible version.
+>
+> You can also set this globally:
+> ```bash
+> echo "legacy-peer-deps=true" >> ~/.npmrc
+> ```
 
 ### For Docker:
 
@@ -53,13 +66,21 @@ Add to your Dockerfile:
 FROM n8nio/n8n:latest
 
 USER root
-RUN npm install -g n8n-nodes-agnicwallet
+RUN cd /home/node/.n8n/nodes && \
+    npm init -y && \
+    npm install n8n-nodes-agnicwallet --legacy-peer-deps
 USER node
+```
+
+### Global Installation (Alternative):
+
+```bash
+npm install -g n8n-nodes-agnicwallet --legacy-peer-deps
 ```
 
 ### For n8n.cloud:
 
-Not yet available. This node must first be approved as a community node by the N8N team.
+Not yet available. This node must first be approved as a community node by the n8n team.
 
 ## Setup
 
@@ -234,6 +255,30 @@ This is standard practice and well-documented in the node's README.
 
 ## Troubleshooting
 
+### "ERESOLVE unable to resolve dependency tree" or "Package subpath './agents' is not defined"
+
+**Cause:**
+Conflicting `langchain` versions between community nodes. Some nodes require `langchain@1.x` while our AI Agent tools require `langchain@0.3.x` (n8n's built-in version).
+
+**Solution:**
+Always install with `--legacy-peer-deps`:
+```bash
+cd ~/.n8n/nodes
+npm install n8n-nodes-agnicwallet --legacy-peer-deps
+```
+
+Or set it globally:
+```bash
+echo "legacy-peer-deps=true" >> ~/.npmrc
+```
+
+If you already installed without this flag, clean up and reinstall:
+```bash
+cd ~/.n8n/nodes
+rm -rf node_modules package-lock.json
+npm install --legacy-peer-deps
+```
+
 ### "Payment signing failed"
 
 **Causes:**
@@ -242,7 +287,7 @@ This is standard practice and well-documented in the node's README.
 - Backend server down
 
 **Solutions:**
-1. Reconnect credentials in N8N
+1. Reconnect credentials in n8n
 2. Check balance at [AgnicWallet](https://app.agnicpay.xyz)
 3. Check backend status
 
