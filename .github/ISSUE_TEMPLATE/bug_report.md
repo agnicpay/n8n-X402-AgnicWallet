@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug or issue with the n8n-nodes-agnicwallet node
+about: Report a bug or issue with the n8n-nodes-agnic node
 title: '[BUG] '
 labels: bug
 assignees: ''
@@ -26,7 +26,7 @@ If applicable, add screenshots to help explain your problem.
 
 ## Environment
 - **n8n version:** [e.g., 1.0.0]
-- **n8n-nodes-agnicwallet version:** [e.g., 1.0.3]
+- **n8n-nodes-agnic version:** [e.g., 1.0.3]
 - **Node.js version:** [e.g., 20.10.0]
 - **Operating System:** [e.g., Ubuntu 22.04, macOS 14.0, Windows 11]
 - **Installation method:** [e.g., npm, Docker, n8n.cloud]

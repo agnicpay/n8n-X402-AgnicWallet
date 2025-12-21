@@ -1,7 +1,7 @@
-# n8n-nodes-agnicwallet
+# n8n-nodes-agnic
 
-[![NPM Version](https://img.shields.io/npm/v/n8n-nodes-agnicwallet)](https://www.npmjs.com/package/n8n-nodes-agnicwallet)
-[![License](https://img.shields.io/npm/l/n8n-nodes-agnicwallet)](https://www.npmjs.com/package/n8n-nodes-agnicwallet)
+[![NPM Version](https://img.shields.io/npm/v/n8n-nodes-agnic)](https://www.npmjs.com/package/n8n-nodes-agnic)
+[![License](https://img.shields.io/npm/l/n8n-nodes-agnic)](https://www.npmjs.com/package/n8n-nodes-agnic)
 [![GitHub issues](https://img.shields.io/github/issues/agnicpay/n8n-X402-AgnicWallet)](https://github.com/agnicpay/n8n-X402-AgnicWallet/issues)
 [![GitHub stars](https://img.shields.io/github/stars/agnicpay/n8n-X402-AgnicWallet)](https://github.com/agnicpay/n8n-X402-AgnicWallet/stargazers)
 
@@ -40,7 +40,7 @@ Install in the n8n custom nodes directory:
 ```bash
 cd ~/.n8n/nodes
 npm init -y  # Only needed first time
-npm install n8n-nodes-agnicwallet --legacy-peer-deps
+npm install n8n-nodes-agnic --legacy-peer-deps
 ```
 
 Then restart n8n:
@@ -68,14 +68,14 @@ FROM n8nio/n8n:latest
 USER root
 RUN cd /home/node/.n8n/nodes && \
     npm init -y && \
-    npm install n8n-nodes-agnicwallet --legacy-peer-deps
+    npm install n8n-nodes-agnic --legacy-peer-deps
 USER node
 ```
 
 ### Global Installation (Alternative):
 
 ```bash
-npm install -g n8n-nodes-agnicwallet --legacy-peer-deps
+npm install -g n8n-nodes-agnic --legacy-peer-deps
 ```
 
 ### For n8n.cloud:
@@ -264,7 +264,7 @@ Conflicting `langchain` versions between community nodes. Some nodes require `la
 Always install with `--legacy-peer-deps`:
 ```bash
 cd ~/.n8n/nodes
-npm install n8n-nodes-agnicwallet --legacy-peer-deps
+npm install n8n-nodes-agnic --legacy-peer-deps
 ```
 
 Or set it globally:
@@ -358,7 +358,7 @@ MIT License
 
 ## Links
 
-- [NPM Package](https://www.npmjs.com/package/n8n-nodes-agnicwallet)
+- [NPM Package](https://www.npmjs.com/package/n8n-nodes-agnic)
 - [AgnicWallet Dashboard](https://app.agnicpay.xyz)
 - [X402 Protocol](https://www.x402.org/)
 - [N8N Documentation](https://docs.n8n.io)

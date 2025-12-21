@@ -1,4 +1,4 @@
-# Contributing to n8n-nodes-agnicwallet
+# Contributing to n8n-nodes-agnic
 
 Thank you for your interest in contributing to the AgnicWallet n8n node! We welcome contributions from the community.
 
@@ -90,8 +90,8 @@ We love new ideas! To suggest a feature:
 
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/n8n-nodes-agnicwallet.git
-cd n8n-nodes-agnicwallet
+git clone https://github.com/YOUR_USERNAME/n8n-nodes-agnic.git
+cd n8n-nodes-agnic
 
 # Install dependencies
 npm install
@@ -113,7 +113,7 @@ npm run dev
 2. **In your n8n installation, link the node:**
    ```bash
    cd ~/.n8n
-   npm link n8n-nodes-agnicwallet
+   npm link n8n-nodes-agnic
    ```
 
 3. **Restart n8n:**
@@ -133,7 +133,7 @@ npm run dev
 ## Project Structure
 
 ```
-n8n-nodes-agnicwallet/
+n8n-nodes-agnic/
 ├── nodes/                    # Node implementations
 │   └── X402HttpRequest/
 │       └── X402HttpRequest.node.ts

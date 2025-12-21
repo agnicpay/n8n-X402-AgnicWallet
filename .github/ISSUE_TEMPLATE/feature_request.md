@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest a new feature or enhancement for n8n-nodes-agnicwallet
+about: Suggest a new feature or enhancement for n8n-nodes-agnic
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''
