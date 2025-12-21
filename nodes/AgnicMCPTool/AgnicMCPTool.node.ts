@@ -12,7 +12,7 @@ import {
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { DynamicStructuredTool } from "@langchain/core/tools";
-import { Toolkit } from "langchain/agents";
+import { Toolkit } from "@langchain/classic/agents";
 import { z } from "zod";
 import { jsonSchemaToZod } from "@n8n/json-schema-to-zod";
 import type { Tool as McpToolType } from "@modelcontextprotocol/sdk/types.js";
