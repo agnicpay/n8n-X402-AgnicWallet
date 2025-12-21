@@ -37,6 +37,8 @@
   "scripts": {
     "build": "node esbuild.config.js && gulp build:icons",
     "dev": "tsc --watch",
+    "lint": "eslint nodes credentials --ext .ts",
+    "lint:fix": "eslint nodes credentials --ext .ts --fix",
     "format": "prettier nodes credentials --write",
     "format:check": "prettier nodes credentials --check",
     "prepublishOnly": "npm run build"
