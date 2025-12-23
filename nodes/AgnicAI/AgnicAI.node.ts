@@ -921,7 +921,7 @@ export class AgnicAI implements INodeType {
         ],
         default: "openai/gpt-4o-mini",
         description:
-          "Select a model or type any OpenRouter model ID. See https://openrouter.ai/models for all available models. Examples: 'openai/gpt-4o', 'anthropic/claude-3.5-sonnet', 'google/gemini-pro-1.5'",
+          "Select a model or type a model ID. Examples: 'openai/gpt-4o', 'anthropic/claude-3.5-sonnet', 'google/gemini-pro-1.5'",
       },
       {
         displayName: "Messages",
@@ -1088,7 +1088,7 @@ export class AgnicAI implements INodeType {
         if (!model || model === "") {
           throw new NodeOperationError(
             this.getNode(),
-            "Model must be specified. Enter an OpenRouter model ID (e.g., 'openai/gpt-4o' or 'anthropic/claude-3.5-sonnet'). See https://openrouter.ai/models for all available models.",
+            "Model must be specified. Enter a model ID (e.g., 'openai/gpt-4o' or 'anthropic/claude-3.5-sonnet').",
             { itemIndex },
           );
         }
