@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-agnic",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "n8n community node for AgnicWallet - automated Web3 payments for X402 APIs",
   "keywords": [
     "n8n-community-node-package",
