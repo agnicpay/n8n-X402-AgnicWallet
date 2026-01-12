@@ -158,7 +158,7 @@ export class X402HttpRequest implements INodeType {
         let authHeader: string;
 
         // Use AgnicWallet backend API endpoint (production cloud)
-        apiBaseUrl = "https://api.agnicpay.xyz";
+        apiBaseUrl = "https://api.agnic.ai";
 
         if (authentication === "oAuth2") {
           // OAuth2 authentication

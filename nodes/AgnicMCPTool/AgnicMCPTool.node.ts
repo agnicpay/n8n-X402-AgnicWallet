@@ -29,7 +29,7 @@ class AgnicMcpToolkit extends Toolkit {
 }
 
 // Pre-configured AgnicPay MCP endpoint (uses HTTP Streamable transport)
-const AGNIC_MCP_ENDPOINT = "https://mcp.agnicpay.xyz/sse";
+const AGNIC_MCP_ENDPOINT = "https://mcp.agnic.ai/sse";
 
 /**
  * Convert JSON Schema to Zod schema using n8n's library
@@ -125,7 +125,7 @@ export class AgnicMCPTool implements INodeType {
       resources: {
         primaryDocumentation: [
           {
-            url: "https://www.agnicpay.xyz/mcp",
+            url: "https://www.agnic.ai/mcp",
           },
         ],
       },

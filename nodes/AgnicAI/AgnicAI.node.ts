@@ -1141,7 +1141,7 @@ export class AgnicAI implements INodeType {
         }
 
         // Make request to AgnicPay AI Gateway
-        const apiUrl = "https://api.agnicpay.xyz/v1/chat/completions";
+        const apiUrl = "https://api.agnic.ai/v1/chat/completions";
 
         this.logger?.info(
           `[AgnicAI] Calling AgnicPay AI Gateway with model: ${model}`,

@@ -450,7 +450,7 @@ export class AgnicAILanguageModel implements INodeType {
       resources: {
         primaryDocumentation: [
           {
-            url: "https://www.agnicpay.xyz/ai-gateway",
+            url: "https://www.agnic.ai/ai-gateway",
           },
         ],
       },
@@ -669,7 +669,7 @@ export class AgnicAILanguageModel implements INodeType {
       timeout: options.timeout ?? 60000,
       maxRetries: 2,
       configuration: {
-        baseURL: "https://api.agnicpay.xyz/v1",
+        baseURL: "https://api.agnic.ai/v1",
       },
       // Add our custom tracing callback for spinning indicator and AI Agent logging
       callbacks: [new AgnicLlmTracing(this)],

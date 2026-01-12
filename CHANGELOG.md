@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Removed `process.env` usage to comply with n8n community node security requirements
-- Hardcoded API endpoint to `https://api.agnicpay.xyz` (was using environment variable override)
+- Hardcoded API endpoint to `https://api.agnic.ai` (was using environment variable override)
 - Fixed n8n automated verification checks
 
 ### Changed

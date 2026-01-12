@@ -86,7 +86,7 @@ Not yet available. This node must first be approved as a community node by the n
 
 ### 1. Create AgnicWallet Account
 
-1. Go to [AgnicWallet](https://app.agnicpay.xyz)
+1. Go to [AgnicWallet](https://pay.agnic.ai)
 2. Sign up with email/social login
 3. Your embedded wallet is created automatically
 
@@ -102,7 +102,7 @@ Not yet available. This node must first be approved as a community node by the n
 
 #### Option B: API Key
 
-1. Log in to [AgnicWallet](https://app.agnicpay.xyz)
+1. Log in to [AgnicWallet](https://pay.agnic.ai)
 2. Go to **Settings** → **API Tokens**
 3. Generate a new token
 4. In N8N, select **API Key** authentication
@@ -188,9 +188,9 @@ JSON body for sending data to the API
 This node requires the AgnicWallet backend API to function. **This is by design and secure.**
 
 ### How It Works
-1. You create a free account at [AgnicWallet](https://app.agnicpay.xyz)
+1. You create a free account at [AgnicWallet](https://pay.agnic.ai)
 2. You authorize n8n to use your wallet (OAuth2 or API Key)
-3. When making X402 requests, the node calls `api.agnicpay.xyz` to sign payments on your behalf
+3. When making X402 requests, the node calls `api.agnic.ai` to sign payments on your behalf
 4. Your wallet is non-custodial (keys managed securely, not stored by AgnicWallet)
 
 ### Why This Architecture?
@@ -200,7 +200,7 @@ This node requires the AgnicWallet backend API to function. **This is by design 
 - **Standard pattern** - Just like Slack, Notion, and other n8n nodes that use external APIs
 
 ### Backend API Details
-- **Hosted at:** `api.agnicpay.xyz` (free to use)
+- **Hosted at:** `api.agnic.ai` (free to use)
 - **Authentication:** OAuth2 or API Key
 - **What it does:** Signs X402 payments with your authorized wallet
 - **Open source:** You can self-host by setting `AGNICWALLET_API_URL` environment variable
@@ -239,17 +239,17 @@ No. This node is specifically designed to work with AgnicWallet's backend API. H
 ### Is the backend API free?
 Yes! The AgnicWallet service is free to use. You only pay blockchain transaction costs (USDC payments).
 
-### What if api.agnicpay.xyz goes down?
+### What if api.agnic.ai goes down?
 - Your workflows will fail with payment signing errors
 - Advanced users can self-host the backend for redundancy
-- Check status at https://app.agnicpay.xyz
+- Check status at https://pay.agnic.ai
 
 ### Can n8n approve a node with external dependencies?
 Absolutely! Most popular n8n community nodes depend on external APIs:
 - Slack → api.slack.com
 - GitHub → api.github.com
 - Stripe → api.stripe.com
-- AgnicWallet → api.agnicpay.xyz ✅
+- AgnicWallet → api.agnic.ai ✅
 
 This is standard practice and well-documented in the node's README.
 
@@ -288,7 +288,7 @@ npm install --legacy-peer-deps
 
 **Solutions:**
 1. Reconnect credentials in n8n
-2. Check balance at [AgnicWallet](https://app.agnicpay.xyz)
+2. Check balance at [AgnicWallet](https://pay.agnic.ai)
 3. Check backend status
 
 ### "Request failed after payment"
@@ -345,12 +345,12 @@ Contributions are welcome! We appreciate bug reports, feature requests, and pull
 
 - **Bug reports & feature requests:** [Open an issue](https://github.com/agnicpay/n8n-X402-AgnicWallet/issues)
 - **Pull requests:** See our [Contributing Guide](CONTRIBUTING.md)
-- **Questions:** Contact us at support@agnicpay.xyz
+- **Questions:** Contact us at support@agnic.ai
 
 ## Support
 
 - **X402 Standard:** [x402.org](https://www.x402.org/)
-- **AgnicWallet:** [Dashboard](https://app.agnicpay.xyz)
+- **AgnicWallet:** [Dashboard](https://pay.agnic.ai)
 
 ## License
 
@@ -359,7 +359,7 @@ MIT License
 ## Links
 
 - [NPM Package](https://www.npmjs.com/package/n8n-nodes-agnic)
-- [AgnicWallet Dashboard](https://app.agnicpay.xyz)
+- [AgnicWallet Dashboard](https://pay.agnic.ai)
 - [X402 Protocol](https://www.x402.org/)
 - [N8N Documentation](https://docs.n8n.io)
 

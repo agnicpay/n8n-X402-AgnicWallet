@@ -48,7 +48,7 @@ A more complex workflow showing integration with other n8n nodes.
 Before using these examples:
 
 1. Install n8n-nodes-agnic: `npm install -g n8n-nodes-agnic`
-2. Create an AgnicWallet account at https://app.agnicpay.xyz
+2. Create an AgnicWallet account at https://pay.agnic.ai
 3. Configure your credentials in n8n (OAuth2 or API Key)
 4. Ensure you have USDC balance in your AgnicWallet
 

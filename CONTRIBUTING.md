@@ -149,7 +149,7 @@ n8n-nodes-agnic/
 
 - Check existing [Issues](https://github.com/agnicpay/n8n-X402-AgnicWallet/issues)
 - Read the [n8n documentation](https://docs.n8n.io/integrations/creating-nodes/)
-- Contact us at support@agnicpay.xyz
+- Contact us at support@agnic.ai
 
 ## Code of Conduct
 
